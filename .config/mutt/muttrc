@@ -1,0 +1,60 @@
+set imap_user="mail.suphalbhattarai4@gmail.com"
+set imap_pass="mynzprburwdakhmq"
+set folder="imaps://suphalbhattarai4@gmail.com@imap.gmail.com:993"
+set spoolfile=+INBOX
+set record="+[Gmail]/Sent Mail"
+set postponed="+[Gmail]/Drafts"
+
+# https://www.neomutt.org/guide/reference search sleep_time for additional info
+set sleep_time=0 # be faster
+set beep=no # no beep sound
+set editor="/usr/bin/nvim"
+set sort=reverse-date   # default sorting by date
+# When sorting by threads, this variable controls how threads are sorted
+# in relation to other threads, and how the branches of the thread trees are sorted.
+set sort_aux=last-date-received
+# Index page format. Default "%4C %Z %{%b %d} %-15.15L (%?l?%4l&%4c?) %s"
+set index_format="%4C %Z %{%b %d %R} %-15.15L (%?l?%4l&%4c?) %s"
+
+
+set sidebar_visible
+set sidebar_format="%B%?F? [%F]?%* %?N?%N/?%S"
+set mail_check_stats
+
+# You can use any gmail imap mailboxes
+mailboxes =INBOX =[Gmail]/Sent\ Mail =[Gmail]/Drafts =[Gmail]/Spam =[Gmail]/Trash
+
+# set pager = "/usr/bin/less"
+# Vim like binds
+bind pager j next-line
+bind pager k previous-line
+bind attach,index,pager \CD next-page
+bind attach,index,pager \CU previous-page
+bind pager g top
+bind pager G bottom
+bind attach,index g first-entry
+bind attach,index G last-entry
+
+# Sidebar binds
+bind index,pager \CP sidebar-prev                 # Ctrl-n to select next folder
+bind index,pager \CN sidebar-next                 # Ctrl-p to select previous folder
+bind index,pager \CI sidebar-open                 # Ctrl-o to open selected folder
+bind index,pager \CB sidebar-toggle-visible       # Ctrl-b to toggle visibility of the sidebar
+
+set realname="Suphal Bhattarai"
+set from="mail.suphalbhattarai4@gmail.com"
+
+set smtp_url="smtps://suphalbhattarai4@gmail.com@smtp.gmail.com:465/"
+set smtp_pass="mynzprburwdakhmq"
+# [smtp.gmail.com]:587 <yourAccount>@gmail.com:<passwordGenerated>
+set smtp_authenticators="gssapi:login"
+set ssl_starttls    = yes
+set ssl_force_tls     = yes
+set use_from         = yes
+
+color progress white red
+# Tells Mutt to automatically view files with these mime types
+auto_view text/html
+# Order to try and show multipart emails
+alternative_order text/plain text/enriched text/html
+source /home/suphal/.config/mutt/dracula.muttrc

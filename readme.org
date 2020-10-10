@@ -1,0 +1,59 @@
+#+TITLE: Customization
+#+DESCRIPTION: Things to do in new linux installation
+#+AUTHOR: Suphal Bhattarai
+
+* Pacman Config
+** Repositories
+*** Archlinuxcn
+Archlinuxcn is a repository with compiled arch user repository packages which can take a long time to compile to add it just paste the following in /etc/pacman.conf file.
+
+[archlinuxcn]
+SigLevel = Optional
+Server = http://repo.archlinuxcn.org/$arch
+
+*** Antidoteaur
+It is similar to archlinuxcn repository. If you want a siglevel, just import the gpg keys of this repository.
+
+[andontie-aur]
+SigLevel = Never
+Server = https://aur.andontie.net/$arch
+
+* Importing gpg keys
+To import a gpg key do the following command.
+
+ gpg --keyserver pool.sks-keyservers.net --recv-key
+
+* For touchpad support
+You do not have to do this if a desktop environment is installed. For clicking with touchpad, just execute this command.
+
+sudo mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
+Section "InputClass"
+        Identifier "touchpad"
+        MatchIsTouchpad "on"
+        Driver "libinput"
+        Option "Tapping" "on"
+        Option "NaturalScrolling" "on"
+        Option "ScrollMethod" "twofinger"
+        EndSection
+
+EOF
+
+* Customization
+
++ Fot themed cursor in qt applications, edit
+
+   ~/.icons/default/index.theme
+
++ Shell
+*** Install oh my zsh
+
+sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+*** Install syntax hightlighting and auto suggestions
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+*** Install powerlevel 10k theme in oh my zsh
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
