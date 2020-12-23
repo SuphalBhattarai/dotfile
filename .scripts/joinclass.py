@@ -1,29 +1,62 @@
-#! /usr/bin/python
-import os
-import pyautogui
-os.system("killall zoom")
-os.system("zoom &")
+#!/usr/bin/python3
 
-# Holds down the alt key
-pyautogui.keyDown("winleft")
+import json
+from os import system, popen
+from time import sleep
 
-# Presses the tab key once
-pyautogui.keyDown("6")
+from pyautogui import press, write
 
-pyautogui.keyUp("6")
-# Lets go of the alt key
-pyautogui.keyUp("winleft")
-os.system("sleep 10")
 
-# pyautogui.moveTo(100, 100, duration=0.25)
-# pyautogui.moveTo(200, 100, duration=0.25)
-# pyautogui.moveTo(200, 200, duration=0.25)
-# pyautogui.moveTo(100, 200, duration=0.25)
-pyautogui.click(1200,300,duration=0.25)
-pyautogui.click(700, 310, duration=0.25)
-pyautogui.typewrite("")
-pyautogui.click(750,520,duration=0.25)
-os.system("sleep 2")
-pyautogui.click(900,460,duration=0.25)
-pyautogui.typewrite("1234")
-pyautogui.click(700,520,duration=0.25)
+def kill_zoom():
+    system("killall zoom")
+    print("killed zoom process")
+    sleep(2)
+
+
+def press_tab(i):
+    for _ in range(i):
+        sleep(0.5)
+        press("tab")
+
+
+def getIdPassword():
+    print("Opening File")
+    with open("/home/suphal/Data/zoom.json") as f:
+        data = json.loads(f.read())
+        meeting_id = data["id"]
+        print("Got the id")
+        password = data["passcode"]
+        print("Got the passcode")
+        return meeting_id, password
+
+
+def main():
+    p = popen("pgrep zoom").read()
+    if len(p) > 3:
+        kill_zoom()
+    system("/usr/bin/zoom &")
+    print("launched zoom")
+    meeting_id, password = getIdPassword()
+    sleep(10)
+    system("wmctrl -a 'Zoom - Free Account'")
+    press_tab(9)
+    press("return")
+    press_tab(2)
+    print("Entering id")
+    write(meeting_id)
+    press("return")
+    sleep(2)
+    try:
+        p = popen("wmctrl -l | grep -i leave").read()
+        if p > 2:
+            press("escape")
+            sleep(2)
+    except:
+        pass
+    print("Entering passcode")
+    write(password)
+    press("return")
+
+
+if __name__ == "__main__":
+    main()
