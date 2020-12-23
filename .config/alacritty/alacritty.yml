@@ -90,7 +90,7 @@ window:
 # Font configuration
 font:
   normal:
-    family: MesloLGS NF
+    family: FantasqueSansMono Nerd Font
     style: Regular
 
   bold:
@@ -105,7 +105,7 @@ font:
     family: monospace
     style: Bold Italic
 
-  size: 12
+  size: 15
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -256,7 +256,7 @@ colors:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 0.7
+background_opacity: 1.0
 
 #selection:
   #semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"

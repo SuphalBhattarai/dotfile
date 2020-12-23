@@ -1,0 +1,187 @@
+#+TITLE: Doom Emacs Config
+#+AUTHOR: Suphal Bhattarai
+#+DESCRIPTION: Doom Emacs Literate Config
+
+* TABLE OF CONTENTS :toc:
+- [[#ui][UI]]
+- [[#company-mode][COMPANY MODE]]
+- [[#org][ORG]]
+- [[#lsp][LSP]]
+- [[#dap][DAP]]
+- [[#hooks][HOOKS]]
+- [[#tangle][Tangle]]
+- [[#keybindings][KEYBINDINGS]]
+
+* UI
+I use dracula colour scheme for emacs because I like it. There are five fonts in doom emacs which are as follows:
++ 'doom-font' -- standard monospace font that is used for most things in Emacs.
++ 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
++ 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
++ 'font-lock-comment-face' -- for comments.
++ 'font-lock-keyword-face' -- for keywords with special significance, like ‘for’ and ‘if’ in C.
+
+#+begin_src emacs-lisp
+
+(setq doom-theme 'doom-dracula)
+(setq display-line-numbers-type t)
+(setq doom-font (font-spec :family "SauceCodePro Nerd Font Mono" :size 15)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
+      doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :size 24))
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+(custom-set-faces!
+  '(font-lock-comment-face :family "FantasqueSansMono" :slant italic)
+  '(font-lock-keyword-face :family "FantasqueSansMono" :slant italic))
+(setq display-line-numbers-type 'relative)
+(setq doom-modeline-major-mode-icon t)
+#+end_src
+
+* COMPANY MODE
+I use company mode for completions and use these to make faster and do less processing and use company-box for asthetic reasons.
+
+#+begin_src emacs-lisp
+
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-idle-delay 0
+      company-tooltip-limit 6
+      company-dabbrev-downcase nil
+      company-minimum-prefix-length 1
+      company-dabbrev-ignore-case nil
+      company-selection-wrap-around t
+      company-selection-default 0)
+(require 'company-box)
+(add-hook 'company-mode-hook 'company-box-mode)
+(add-hook 'company-mode-hook
+          (lambda ()
+            (substitute-key-definition
+             'company-complete-common
+             'company-yasnippet-or-completion
+             company-active-map)))
+#+end_src
+
+* ORG
+#+begin_src emacs-lisp
+
+(setq org-directory "~/Documents/org/")
+(after! org
+  (set-face-attribute 'org-link nil
+                      :weight 'normal
+                      :background nil)
+  (set-face-attribute 'org-code nil
+                      :foreground "#a9a1e1"
+                      :background nil)
+  (set-face-attribute 'org-date nil
+                      :foreground "#5B6268"
+                      :background nil)
+  (set-face-attribute 'org-level-1 nil
+                      :foreground "steelblue2"
+                      :background nil
+                      :height 1.5
+                      :family "FantasqueSansMono"
+                      :weight 'normal)
+  (set-face-attribute 'org-level-2 nil
+                      :family "FantasqueSansMono"
+                      :foreground "slategray2"
+                      :background nil
+                      :height 1.4
+                      :weight 'normal)
+  (set-face-attribute 'org-level-3 nil
+                      :family "FantasqueSansMono"
+                      :foreground "SkyBlue2"
+                      :background nil
+                      :height 1.3
+                      :weight 'normal)
+  (set-face-attribute 'org-level-4 nil
+                      :family "FantasqueSansMono"
+                      :foreground "DodgerBlue2"
+                      :background nil
+                      :height 1.2
+                      :weight 'normal)
+  (set-face-attribute 'org-level-5 nil
+                      :family "FantasqueSansMono"
+                      :height 1.15
+                      :weight 'normal)
+  (set-face-attribute 'org-level-6 nil
+                      :family "FantasqueSansMono"
+                      :height 1.1
+                      :weight 'normal)
+  (set-face-attribute 'org-document-title nil
+                      :family "FantasqueSansMono"
+                      :foreground "SlateGray1"
+                      :background nil
+                      :height 1.75
+                      :weight 'bold)
+  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+#+end_src
+
+* LSP
+I use lsp for simple configuration and easy to get completions. I use these variables for faster performance and optimize it.
+#+begin_src emacs-lisp
+
+(setq read-process-output-max (* 4 1024 1024)
+      lsp-idle-delay 0.0
+      gc-cons-threshold 100000000)
+(setq python-shell-interpreter "python3")
+#+end_src
+
+* DAP
+This is my configurations for dap-mode or debugger apdapter and it keybindings.
+#+begin_src emacs-lisp
+(require 'dap-python)
+(global-set-key [f10] 'dap-debug)
+(global-set-key [f8]  'dap-breakpoint-toggle)
+(global-set-key [f2]  'dap-step-in)
+(global-set-key [f3]  'dap-step-out)
+#+end_src
+* HOOKS
+These are all the hooks for me.
+#+begin_src emacs-lisp
+
+(add-hook 'c++-mode-hook 'lsp)
+(add-hook 'org-mode-hook 'ispell-minor-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook '+org/close-all-folds)
+(add-hook 'org-mode-hook  #'icomplete-mode)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+#+end_src
+
+* Tangle
+#+begin_src emacs-lisp
+(defun suphal/org-babel-tangle-config ()
+  (when (string-equal (file-name-directory (buffer-file-name))
+                      (expand-file-name "~/.xmonad/"))
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'suphal/org-babel-tangle-config)))
+#+end_src
+* KEYBINDINGS
+These are some of my keybindings for doom emacs.
+#+BEGIN_SRC emacs-lisp
+(defun my-ii ()
+  (interactive)
+  (let* ((initial-key ?i)
+         (final-key ?i)
+         (timeout 0.5)
+         (event (read-event nil nil timeout)))
+    (if event
+        ;; timeout met
+        (if (and (characterp event) (= event final-key))
+            (evil-normal-state)
+          (insert initial-key)
+          (push event unread-command-events))
+      ;; timeout exceeded
+      (insert initial-key))))
+
+(define-key evil-insert-state-map (kbd "i") 'my-ii)
+
+(evil-define-key 'normal dired-mode-map
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-open-file)
+
+(let ((keymap company-active-map))
+  (define-key keymap [tab] 'company-complete-selection)
+  (define-key keymap (kbd "TAB") 'company-complete-selection))
+#+END_SRC

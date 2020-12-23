@@ -57,3 +57,9 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.
 
 *** Install powerlevel 10k theme in oh my zsh
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+* KDE
+This is kde specific changes. I use tiling extension called kronkite. For the customization of this extension, these commands should be used.
+
+mkdir -p ~/.local/share/kservices5/
+ln -s ~/.local/share/kwin/scripts/krohnkite/metadata.desktop ~/.local/share/kservices5/krohnkite.desktop

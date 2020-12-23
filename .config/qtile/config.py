@@ -7,7 +7,7 @@ from libqtile.command import lazy
 from libqtile import layout, bar, widget, hook
 from typing import List
 
-myTerm = "termite"
+myTerm = "alacritty"
 mod = "mod4"
 
 keys = [
@@ -54,6 +54,7 @@ keys = [
     Key([mod],"x", lazy.spawn("/home/suphal/.scripts/screenlock.sh")),
     Key([],"Print", lazy.spawn("flameshot full -p /home/suphal/Data/Screenshots/")),
     Key([mod],"Print", lazy.spawn("flameshot gui")),
+    Key([mod, "shift"],"Print", lazy.spawn("spectacle gui")),
 
     # Window resize
     Key([mod, "shift"], 'h', lazy.layout.shrink()),
@@ -70,11 +71,13 @@ keys = [
 
     # Launch Applications
     Key([mod, "shift"], "b", lazy.spawn("firefox")),
-    Key([mod, "shift"], "c", lazy.spawn("chromium")),
+    Key([mod, "shift"], "c", lazy.spawn("qutebrowser")),
     Key([mod], "Return", lazy.spawn(myTerm)),
-    Key([mod, "shift"], "e", lazy.spawn("thunar")),
+    Key([mod, "shift"], "e", lazy.spawn("pcmanfm")),
+    Key([mod, "shift"], "v", lazy.spawn("emacsclient -c")),
+    Key([mod], "v", lazy.spawn(myTerm+" -e nvim")),
     Key([mod], "e", lazy.spawn("termite -e vifm")),
-    Key([mod, "shift"], "x", lazy.spawn("/home/suphal/.scripts/joinclass.py")),
+    #  Key([mod, "shift"], "x", lazy.spawn("/home/suphal/.scripts/joinclass.py")),
     Key([mod, "shift"], "d", lazy.spawn("/home/suphal/.scripts/launchscripts.py")),
     Key([mod],"space", lazy.spawn("dmenufm")),
 ]
@@ -402,7 +405,7 @@ floating_layout = layout.Floating(float_rules=[
 
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    home = os.path.expanduser('~/.autostart.sh')
     subprocess.call([home])
     subprocess.Popen(['xsetroot', '-cursor_name', 'Breeze_Default'])
 

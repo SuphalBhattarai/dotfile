@@ -1,3 +1,10 @@
+#+TITLE: Readme
+#+PROPERTY: header-args:haskell :tangle ./xmonad.hs
+#+DESCRIPTION: Xmonad config
+
+* Imports
+There are various import for xmonads. 
+#+begin_src haskell
 import qualified Data.Map as M
 import           Data.Monoid
 import           System.Exit
@@ -28,7 +35,10 @@ import XMonad.Actions.Promote
 import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Codec.Binary.UTF8.String as UTF8
+#+end_src
 
+* Variables
+#+begin_src haskell
 myTerminal :: String
 myTerminal = "alacritty"
 
@@ -51,14 +61,27 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 ------------------------------------------------------------------------
 altMask :: KeyMask
 altMask = mod1Mask
+#+end_src
 
+* Layouts
+I use three layouts.
+Tall    = Master and Stack
+float   = Floating
+Monocle = Fullscreen
+
+#+begin_src haskell
 tall     = renamed [Replace "tall"]
            $ mySpacing 4
            $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"] $ Full
 --float    = renamed [Replace "float"] $ simplestFloat
 myLayout = avoidStruts ( smartBorders tall ||| smartBorders simplestFloat ||| noBorders monocle)
+#+end_src
 
+* Window Rules
+These are window rules and some window floating windows.
+
+#+begin_src haskell
 myManageHook = composeAll
     [ className =? "MPlayer"             --> doFloat
     , className =? "Gimp"                --> doFloat
@@ -75,9 +98,16 @@ myManageHook = composeAll
     , className =? "Chromium"            --> doShift ( myWorkspaces !! 8 )
     , className =? "firefox" <&&> resource =? "Dialog" --> doFloat  -- Float Firefox Dialog
     ]
+#+end_src
 
+* Event Hook
+#+begin_src haskell
 myEventHook = docksEventHook
+#+end_src
 
+* Log Hook
+
+#+begin_src haskell
 myLogHook :: D.Client -> PP
 myLogHook dbus = def { ppOutput = dbusOutput dbus }
 
@@ -92,13 +122,23 @@ dbusOutput dbus str = do
     objectPath = D.objectPath_ "/org/xmonad/Log"
     interfaceName = D.interfaceName_ "org.xmonad.Log"
     memberName = D.memberName_ "Update"
+#+end_src
 
+* Startup Hook
+
+#+begin_src haskell
 myStartupHook :: X ()
 myStartupHook = do
             spawnOnce "trayer --edge top --align center --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282c34  --height 22"
             spawnOnce "sh /home/suphal/.autostart.sh"
             setWMName "LG3D"
+#+end_src
 
+* Keybindings
+These are the keybindings for xmonad.
+
+** Mouse
+#+begin_src haskell
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-button1, Set the window to floating mode and move by dragging
     [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
@@ -110,13 +150,19 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
                                        >> windows W.shiftMaster))
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
-
+#+end_src
+** Xmonad
+#+begin_src haskell
 newKeys :: [(String, X ())]
 newKeys = [  ("M-S-r", spawn "xmonad --recompile") -- Recompiles xmonad
         , ("M-C-r", spawn "xmonad --restart")   -- Restarts xmonad
         , ("M-C-q", io exitSuccess)             -- Quits xmonad
         , ("M-x"  , spawn "dm-tool lock")       -- Lock the screen
+#+end_src
 
+** Window
+
+#+begin_src haskell
         , ("M-w",          kill)                            -- Close the selected window
         , ("M-t",          withFocused $ windows . W.sink)  -- Push floating window back to tile
         , ("M-m",          windows W.focusMaster)           -- Move focus to the master window
@@ -130,7 +176,11 @@ newKeys = [  ("M-S-r", spawn "xmonad --recompile") -- Recompiles xmonad
         , ("M-l",          sendMessage Expand)              -- Expand horiz window width
         , ("M-S-h",        sendMessage MirrorShrink)        -- Shrink vert window width
         , ("M-S-l",        sendMessage MirrorExpand)        -- Exoand vert window width
+#+end_src
 
+** Layout
+  
+#+begin_src haskell
         , ("M-<Space>",    sendMessage NextLayout)          -- Switch to next layout
         , ("M-b",          sendMessage ToggleStruts)        -- Toggles struts
         , ("M-i",          incWindowSpacing 4)              -- Increase window spacing
@@ -139,7 +189,10 @@ newKeys = [  ("M-S-r", spawn "xmonad --recompile") -- Recompiles xmonad
         , ("M-S-C-i",      decScreenSpacing 4)              -- Decrease screen spacing
         , ("M-M1-j",       sendMessage (IncMasterN 1))      -- Increase number of clients in master pane
         , ("M-M1-k",       sendMessage (IncMasterN (-1)))   -- Decrease number of clients in master pane
+#+end_src
 
+** Media
+#+begin_src haskell
         , ("<XF86MonBrightnessUp>",   spawn "/home/suphal/.xmonad/brightnessup.sh")
         , ("<XF86MonBrightnessDown>", spawn "/home/suphal/.xmonad/brightnessdown.sh")
         , ("<XF86AudioPlay>",         spawn "playerctl play-pause")
@@ -153,18 +206,28 @@ newKeys = [  ("M-S-r", spawn "xmonad --recompile") -- Recompiles xmonad
         , ("<XF86Calculator>",        spawn "gnome-calculator")
         , ("<Print>",                 spawn "flameshot full -p /home/suphal/Data/Screenshots/")
         , ("M-<Print>",               spawn "flameshot gui")
+#+end_src
 
+** Spawn Applications
+*** Terminal Applications
+#+begin_src haskell
         , ("M-<Return>",   spawn myTerminal)
         , ("M-S-e",        spawn (myTerminal ++ " -e vifm"))
         , ("M-v"  ,        spawn (myTerminal ++ " -e nvim"))
         , ("M-S-d",        spawn "python3 /home/suphal/.scripts/launchscripts.py")
+#+end_src
 
+*** Graphical Applications
+#+begin_src haskell
         , ("M-d"  ,        spawn "rofi -show drun")
         , ("M-e"  ,        spawn "pcmanfm-qt")
         , ("M-S-v",        spawn "emacsclient -c -a emacs")
         , ("M-c"  ,        spawn "rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'")
         ]
+#+end_src
 
+** Incompatible Keybindings
+#+begin_src haskell
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
@@ -181,7 +244,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
       ((modm .|. shiftMask, xK_b     ), spawn "firefox")
     , ((modm .|. shiftMask, xK_c     ), spawn "chromium")
     ]
+#+end_src
+* Main
+The main function for functional haskell and xmonad.
 
+#+begin_src haskell
 main :: IO()
 main = do
     dbus <- D.connectSession
@@ -226,3 +293,4 @@ main = do
         -- logHook            = myLogHook,
         startupHook        = myStartupHook
     }`additionalKeysP` newKeys
+#+end_src

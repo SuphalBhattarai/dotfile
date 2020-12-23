@@ -1,3 +1,4 @@
 #!/bin/bash
 blight set +5%
-notify-send 'Brightness' "The current brightness is $(blight get)"
+x=$(blight get)
+notify-send 'Brightness' "The current brightness is $(($x*100/255))%"

@@ -1,0 +1,35 @@
+Config { font    = "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Mononoki Nerd Font:pixelsize=11:antialias=true:hinting=true"
+                           , "xft:Mononoki Nerd Font:pixelsize=16:antialias=true:hinting=true"
+                           , "xft:FontAwesome:pixelsize=13"
+                           ]
+       , bgColor = "#282c34"
+       , fgColor = "#ff6c6b"
+       , position = Static { xpos = 0 , ypos = 0, width = 1366, height = 22 }
+       , lowerOnStart = True
+       , hideOnStart = False
+       , allDesktops = True
+       , persistent = True
+       , iconRoot = "/home/suphal/.xmonad/xpm/"  -- default: "."
+       , commands = [
+                      Run Date "<fn=1>\xf133 </fn> %b %d %Y (%I:%M)" "date" 50
+                    , Run DynNetwork     [ "--template" , "<dev>: <tx>kB/s|<rx>kB/s"
+                             , "--Low"      , "1000"       -- units: B/s
+                             , "--High"     , "5000"       -- units: B/s
+                             , "--low"      , "darkgreen"
+                             , "--normal"   , "darkorange"
+                             , "--high"     , "darkred"
+                             ] 10
+                    , Run Cpu ["-t", "cpu: (<total>%)","-H","50","--high","red"] 20
+                    , Run Memory ["-t", "<fn=1>\xf233 </fn> mem: <used>M (<usedratio>%)"] 20
+
+                    , Run Com "/home/dt/.local/bin/pacupdate" [] "pacupdate" 36000
+                    , Run Com "/bin/bash" ["-c", "amixer get Master | awk -F'[]%[]' '/%/ {if ($7 == \"off\") { print \"MM\" } else { print $2 }}' | head -n 1"] "volume" 10
+                    , Run Com "/bin/bash" ["-c", "/home/suphal/.scripts/brightness.sh"] "brightness" 10
+
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<fc=#6666ff><fn=2> </fn> </fc><fc=#666666>  |</fc> %UnsafeStdinReader% }{ <fc=#b3afc2><fn=2> </fn> </fc><fc=#666666> <fn=2>|</fn></fc><fc=#ecbe7b><fn=2> </fn> %cpu% </fc><fc=#666666> <fn=2>|</fn></fc><fc=#ff6c6b> %memory% </fc><fc=#666666> <fn=2>|</fn></fc><fc=#51afef><fn=1> </fn>%brightness% </fc><fc=#666666> <fn=2>|</fn></fc><fc=#98be65> %dynnetwork% </fc><fc=#666666> <fn=2>|</fn></fc><fc=#c678dd><fn=2> </fn>  %volume% </fc><fc=#666666> <fn=2>|</fn></fc><fc=#46d9ff> %date%  </fc>"
+       }
