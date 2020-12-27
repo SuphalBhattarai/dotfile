@@ -1,8 +1,8 @@
 (setq doom-theme 'doom-dracula)
 (setq display-line-numbers-type t)
-(setq doom-font (font-spec :family "SauceCodePro Nerd Font Mono" :size 15)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
-      doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :size 24))
+(setq doom-font (font-spec :family "FiraCode Nerd Font Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 16)
+      doom-big-font (font-spec :family "FiraCode Nerd Font Mono" :size 24))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -29,22 +29,28 @@
              'company-yasnippet-or-completion
              company-active-map)))
 
-(setq org-directory "~/Documents/org/")
+(setq org-directory "~/Documents/org/"
+      org-ellipsis " ▼ "
+      visual-fill-column-center-text t
+      )
 (after! org
   (set-face-attribute 'org-link nil
+                      :family "FantasqueSansMono"
                       :weight 'normal
                       :background nil)
   (set-face-attribute 'org-code nil
+                      :family "FiraCode Nerd Font Mono"
                       :foreground "#a9a1e1"
                       :background nil)
   (set-face-attribute 'org-date nil
+                      :family "FantasqueSansMono"
                       :foreground "#5B6268"
                       :background nil)
   (set-face-attribute 'org-level-1 nil
+                      :family "FiraCode Nerd Font Mono"
                       :foreground "steelblue2"
                       :background nil
                       :height 1.5
-                      :family "FantasqueSansMono"
                       :weight 'normal)
   (set-face-attribute 'org-level-2 nil
                       :family "FantasqueSansMono"
@@ -77,8 +83,7 @@
                       :foreground "SlateGray1"
                       :background nil
                       :height 1.75
-                      :weight 'bold)
-  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+                      :weight 'bold))
 
 (setq read-process-output-max (* 4 1024 1024)
       lsp-idle-delay 0.0
@@ -94,10 +99,15 @@
 (add-hook 'c++-mode-hook 'lsp)
 (add-hook 'org-mode-hook 'ispell-minor-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook 'org-bullets-mode)
 (add-hook 'org-mode-hook '+org/close-all-folds)
-(add-hook 'org-mode-hook  #'icomplete-mode)
+(add-hook 'org-mode-hook #'icomplete-mode)
+(add-hook 'org-mode-hook 'visual-fill-column-mode)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+(add-hook 'js2-mode-hook 'skewer-mode)
+(add-hook 'css-mode-hook 'skewer-css-mode)
+(add-hook 'html-mode-hook 'skewer-html-mode)
 
 (defun suphal/org-babel-tangle-config ()
   (when (string-equal (file-name-directory (buffer-file-name))
@@ -107,26 +117,14 @@
       (org-babel-tangle))))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'suphal/org-babel-tangle-config)))
 
-(defun my-ii ()
-  (interactive)
-  (let* ((initial-key ?i)
-         (final-key ?i)
-         (timeout 0.5)
-         (event (read-event nil nil timeout)))
-    (if event
-        ;; timeout met
-        (if (and (characterp event) (= event final-key))
-            (evil-normal-state)
-          (insert initial-key)
-          (push event unread-command-events))
-      ;; timeout exceeded
-      (insert initial-key))))
-
-(define-key evil-insert-state-map (kbd "i") 'my-ii)
-
+(setq evil-escape-unordered-key-sequence t)
+(general-define-key :keymaps 'evil-insert-state-map
+                    (general-chord "jk") 'evil-normal-state
+                    (general-chord "kj") 'evil-normal-state)
+(setq-default evil-escape-key-sequence "ii")
 (evil-define-key 'normal dired-mode-map
   (kbd "h") 'dired-up-directory
-  (kbd "l") 'dired-open-file)
+  (kbd "l") 'dired-find-file)
 
 (let ((keymap company-active-map))
   (define-key keymap [tab] 'company-complete-selection)
