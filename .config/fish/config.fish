@@ -1,6 +1,6 @@
 set TERM "xterm-256color"
-set EDITOR "micro"
-set VISUAL "code"
+set EDITOR "nvim"
+set VISUAL "emacs"
 
 
 ## Lambda theme https://github.com/hasanozgan/theme-lambda
@@ -185,20 +185,24 @@ alias vdir='vdir --color=auto'
 alias grep='grep -i --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias upd='sudo reflector --latest 40 --age 2 --fastest 5 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && cat /etc/pacman.d/mirrorlist && sudo pacman -Syu'
+alias upd='sudo reflector --latest 40 --age 2 --fastest 25 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && cat /etc/pacman.d/mirrorlist && paru -Syu'
 
 set fish_greeting
 
-abbr ins sudo pacman -S
-abbr update sudo pacman -Syu
+abbr ins paru -S
+abbr aur paru -S
+abbr update paru -Syu
 abbr tsm transmission-remote
-abbr cp cp -rv
 abbr mv mv -v
+abbr p sudo pacman
 
+alias cp="rsync -Prvha --modify-window=1 --info=stats --info=progress2"
 alias doom='~/.emacs.d/bin/doom'
 alias vim="nvim"
+alias vi="vim"
 alias svim="sudo nvim"
 alias mount="sudo mount"
 alias umount="sudo umount"
+alias torrents="~/.scripts/torrents.sh"
 
 export QT_QPA_PLATFORMTHEME="qt5ct"

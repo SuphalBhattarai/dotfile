@@ -8,33 +8,24 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 
-call vundle#begin()		" required, all plugins must appear after this line.
+call plug#begin('~/.vim/plugged')
 
-Plugin 'SirVer/ultisnips' | Plugin 'honza/vim-snippets'
-Plugin 'gmarik/Vundle.vim'							" Vundle
-Plugin 'itchyny/lightline.vim'                      " Lightline statusbar
-Plugin 'ap/vim-css-color'                           " Color previews for CSS
-Plugin 'scrooloose/nerdtree'						" added nerdtree
-Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plugin 'vim-python/python-syntax'
-Plugin 'vim-scripts/AutoComplPop'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'scrooloose/nerdcommenter'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'gmarik/Vundle.vim'							" Vundle
+Plug 'itchyny/lightline.vim'                      " Lightline statusbar
+Plug 'ap/vim-css-color'                           " Color previews for CSS
+Plug 'scrooloose/nerdtree'						" added nerdtree
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'vim-python/python-syntax'
+Plug 'jiangmiao/auto-pairs'
+Plug 'scrooloose/nerdcommenter'
 
 
-call vundle#end()		" required, all plugins must appear before this line.
+call plug#end()
 
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
-
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-
-" see :h vundle for more details or wiki for FAQ
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NERDTree
@@ -92,7 +83,6 @@ set noswapfile
 set complete+=kspell
 set completeopt=menuone,longest
 set shortmess+=c
-
 "" Auto executing commands
 autocmd BufWritePost ~/.Xresources,~/.Xdefaults !xrdb %
 autocmd BufWritePre * :call CleanExtraSpaces()

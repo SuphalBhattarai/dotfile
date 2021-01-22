@@ -12,22 +12,23 @@ import           XMonad
 import qualified XMonad.StackSet as W
 
 -- My imports
-import System.IO (hPutStrLn) --For xmobar woekspaces
-import XMonad.Hooks.ManageDocks --For dock or bar
-import XMonad.Hooks.EwmhDesktops --for desktop name in bar
-import XMonad.Util.SpawnOnce -- For spawn once variable
+import System.IO (hPutStrLn)                             --For xmobar woekspaces
+import XMonad.Hooks.ManageDocks                          --For dock or bar
+import XMonad.Hooks.EwmhDesktops                         --for desktop name in bar
+import XMonad.Util.SpawnOnce                             -- For spawn once variable
 import XMonad.Util.Run (runProcessWithInput, spawnPipe)
-import XMonad.Hooks.DynamicLog --for polybar
-import XMonad.Util.EZConfig (additionalKeysP) --For media keys
-import XMonad.Hooks.InsertPosition --For inversion of master and stack
-import XMonad.Hooks.ManageHelpers --For fullscreen
-import XMonad.Layout.SimplestFloat -- For floating mode
-import XMonad.Layout.NoBorders --For no border mode
-import XMonad.Layout.Spacing -- For spaces in layouts
-import XMonad.Hooks.SetWMName -- For java applications
+import XMonad.Hooks.DynamicLog                           --for polybar
+import XMonad.Util.EZConfig (additionalKeysP)            --For media keys
+import XMonad.Hooks.InsertPosition                       --For inversion of master and stack
+import XMonad.Hooks.ManageHelpers                        --For fullscreen
+import XMonad.Layout.SimplestFloat                       --For floating mode
+import XMonad.Layout.Spiral                              --For Spiral layout
+import XMonad.Layout.NoBorders                           --For no border mode
+import XMonad.Layout.Spacing                             -- For spaces in layouts
+import XMonad.Hooks.SetWMName                            -- For java applications
 import XMonad.Layout.LayoutModifier
-import XMonad.Layout.ResizableTile -- For increasing height of tiled windows
-import XMonad.Layout.Renamed       -- For changing laout name
+import XMonad.Layout.ResizableTile                       -- For increasing height of tiled windows
+import XMonad.Layout.Renamed                             -- For changing laout name
 import System.Exit (exitSuccess)
 import XMonad.Actions.MouseResize
 import XMonad.Actions.Promote
@@ -75,7 +76,9 @@ tall     = renamed [Replace "tall"]
            $ ResizableTall 1 (3/100) (1/2) []
 monocle  = renamed [Replace "monocle"] $ Full
 --float    = renamed [Replace "float"] $ simplestFloat
-myLayout = avoidStruts ( smartBorders tall ||| smartBorders simplestFloat ||| noBorders monocle)
+spirals  = renamed [Replace "spirals"]
+           $ spiral (6/7) 
+myLayout = avoidStruts ( smartBorders tall ||| smartBorders simplestFloat ||| noBorders monocle ||| smartBorders spirals)
 #+end_src
 
 * Window Rules
@@ -88,6 +91,7 @@ myManageHook = composeAll
     , title     =? "Zoom - Free Account" --> doFloat
     , resource  =? "desktop_window"      --> doIgnore
     , resource  =? "kdesktop"            --> doIgnore
+    , title     =? "vlc"                 --> doFullFloat
     , className =? ""                    --> doShift ( myWorkspaces !! 2 )
     , className =? "Spotify"             --> doShift ( myWorkspaces !! 2 )
     , className =? "Kodi"                --> doShift ( myWorkspaces !! 3 )
@@ -219,7 +223,7 @@ newKeys = [  ("M-S-r", spawn "xmonad --recompile") -- Recompiles xmonad
 
 *** Graphical Applications
 #+begin_src haskell
-        , ("M-d"  ,        spawn "rofi -show drun")
+        , ("M-d"  ,        spawn "dmenu_run -c -l 20 -p 'Run :'")
         , ("M-e"  ,        spawn "pcmanfm-qt")
         , ("M-S-v",        spawn "emacsclient -c -a emacs")
         , ("M-c"  ,        spawn "rofi -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}'")

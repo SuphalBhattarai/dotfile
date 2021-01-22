@@ -1,11 +1,20 @@
 #!/bin/bash
+
+apps=("picom" "dunst" "lxsession" "flameshot" "greenclip" "unclutter" "transmission-daemon")
+
+for i in "${apps[@]}"; do
+    x=$(pgrep $i)
+    if [ $x -gt 100 ]; then
+        killall $i
+    fi
+done
 picom &
-nitrogen --restore
 numlockx &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 dunst &
-xfce4-power-manager &
+lxsession &
 flameshot &
+greenclip daemon &
 unclutter &
-# sh /home/suphal/.config/polybar/launch.sh
-xdo lower -N polybar
+emacs --daemon &
+nitrogen --random --set-scaled /home/suphal/Data/wallpapers/
+transmission-daemon -w /home/suphal/Videos &
