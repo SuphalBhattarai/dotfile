@@ -1,0 +1,17 @@
+emails = {
+    "RB": "rbprasadi040@gmail.com",
+    "SH": "shchemistryprasadi1@gamil.com",
+    "GT": "gtphyprasadi@gmail.com",
+    "ND": "ndphysicsprasadi@gmail.com",
+    "KBP": "kbpchemistryprasadi@gmail.com",
+    "SND": "sndnepaliprasadi@gmail.com",
+    "SP": "spprasadinepali@gmail.com",
+    "RKS": "rksphysicsprasadi@gmail.com",
+    "RPY": "rpy.physics.prasadi@gmail.com",
+    "GS": "gsbiologyprasadi@gmail.com",
+    "MKG": "Mkgenglishprasadi@gmail.com",
+    "BPS": "bpsbiologyprasadi@gmail.com",
+    "AD": "adenglishprasadi@gmail.com",
+    "SSA": "ssabiologyprasadi@gmail.com",
+    "TEST": "rbhattaraisuphal@gmail.com",
+}

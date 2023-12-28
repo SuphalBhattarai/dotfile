@@ -1,0 +1,89 @@
+#+TITLE: Customization
+#+DESCRIPTION: Things to do in new linux installation
+#+AUTHOR: Suphal Bhattarai
+   _____             __          __   ____  __          __  __                   _
+  / ___/__  ______  / /_  ____ _/ /  / __ )/ /_  ____ _/ /_/ /_____ __________ _(_)
+  \__ \/ / / / __ \/ __ \/ __ `/ /  / __  / __ \/ __ `/ __/ __/ __ `/ ___/ __ `/ /
+ ___/ / /_/ / /_/ / / / / /_/ / /  / /_/ / / / / /_/ / /_/ /_/ /_/ / /  / /_/ / /
+/____/\__,_/ .___/_/ /_/\__,_/_/  /_____/_/ /_/\__,_/\__/\__/\__,_/_/   \__,_/_/
+          /_/
+
+* Pacman Config
+** Repositories
+*** Archlinuxcn
+Archlinuxcn is a repository with compiled arch user repository packages which can take a long time to compile to add it just paste the following in /etc/pacman.conf file.
+
+#+begin_src
+
+[archlinuxcn]
+SigLevel = Optional
+Server = http://repo.archlinuxcn.org/$arch
+#+end_src
+
+*** Chaotic aur
+It is similar to archlinuxcn repository.
+
+#+begin_src
+
+[chaotic-aur]
+# Germany
+Server = http://chaotic.bangl.de/$repo/$arch
+
+# USA
+Server = https://builds.garudalinux.org/repos/$repo/$arch
+Server = https://repo.kitsuna.net/$arch
+
+# Netherlands
+Server = https://chaotic.tn.dedyn.io/$arch
+
+# Burgos, Spain
+Server = https://repo.jkanetwork.com/repo/$repo/$arch
+
+# Seoul, Korea
+Server = https://mirror.maakpain.kro.kr/garuda/$repo/$arch
+#+end_src
+
+* Importing gpg keys
+To import a gpg key do the following command.
+
+#+begin_src shell
+
+ gpg --keyserver pool.sks-keyservers.net --recv-key
+#+end_src
+
+* For touchpad support
+You do not have to do this if a desktop environment is installed. For clicking with touchpad, just execute this command in bash or equivalent.
+
+#+begin_src shell
+
+sudo mkdir -p /etc/X11/xorg.conf.d && sudo tee <<'EOF' /etc/X11/xorg.conf.d/90-touchpad.conf 1> /dev/null
+Section "InputClass"
+        Identifier "touchpad"
+        MatchIsTouchpad "on"
+        Driver "libinput"
+        Option "Tapping" "on"
+        Option "NaturalScrolling" "on"
+        Option "ScrollMethod" "twofinger"
+        EndSection
+
+EOF
+
+#+end_src
+* Customization
+
++ Fot themed cursor in qt applications, edit ~/.icons/default/index.theme and for qt5ct add the environmental variable in /etc/profile.
+
+  #+begin_src
+    echo 'QT_QPA_PLATFORMTHEME="qt5ct"
+    export QT_QPA_PLATFORMTHEME' >> /etc/profile
+  #+end_src
+
+* KDE
+This is kde specific changes. I use tiling extension called kronkite. For the customization of this extension, these commands should be used.
+
+#+begin_src shell
+
+
+mkdir -p ~/.local/share/kservices5/
+ln -s ~/.local/share/kwin/scripts/krohnkite/metadata.desktop ~/.local/share/kservices5/krohnkite.desktop
+#+end_src

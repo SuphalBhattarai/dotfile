@@ -1,0 +1,5 @@
+#timeout 200 'hyprctl dispatch dpms off'
+timeout 300 ~/.config/swayidle/check.sh
+timeout 600 ~/.config/swayidle/suspend.sh
+# resume 'hyprctl dispatch dpms on'
+before-sleep  ~/.config/scripts/lock.sh

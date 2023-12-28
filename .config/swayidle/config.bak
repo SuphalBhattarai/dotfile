@@ -1,0 +1,2 @@
+timeout 300 ~/.config/swayidle/check.sh
+timeout 600 ~/.config/swayidle/suspend.sh
